@@ -48,7 +48,7 @@ public class Organize {
         }
 
         Thread[] threads = new Thread[thrNumber];
-        int arr[] = GenerateArray.generateRandomIntArray(arrSize);
+        int arr[] = GenerateArray.generateRandomIntArray(arrSize );
 
         for (int i = 0; i < arr.length; i++) {
             System.out.print(arr[i] + " ");
