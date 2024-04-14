@@ -16,30 +16,40 @@ public class CheckSection implements Runnable {
         this.numberOfThreads = numberOfThreads;
     }
 
+    private void swap(int pos) {
+        int temp = arr[pos];
+        arr[pos] = arr[pos+ 1];
+        arr[pos + 1] = temp;
+    }
     @Override
     public void run() {
         int times = 0;
         while (done) {
             done = false;
+            int calc = position + times*numberOfThreads;
+            if((size - calc)/2 <= position)
+                break;
             int i = 0;
             locks[i].lock();
-            for ( ; i < size - 1 - position - times*numberOfThreads; i++) {
-                {
+            for ( ; i < size - 1 - calc ; i++) {
 
-                    locks[i+1].lock();
-                    try {
-                        if (array[i] > array[i + 1]) {
-                            int temp = array[i];
-                            array[i] = array[i + 1];
-                            array[i + 1] = temp;
-                            swapped = true;
-                        }
-                    } finally {
-                        locks[i].unlock();
+                locks[i+1].lock();
+                if (arr[i] > arr[i + 1]) {
+                    //int q =i+1;
+                    /*System.out.println("thread " + position + " index " + i + " with " + q +" elements "
+                            + arr[i] + " "+ arr[i+1]);*/
+                    swap(i);
+                    done = true;
+
+                   /* for (int z = 0; z < arr.length; z++) {
+                        System.out.print(arr[z] + " ");
                     }
+                    System.out.print(System.lineSeparator());*/
                 }
+                locks[i].unlock();
+
             }
-            locks[i+1].unlock();
+            locks[i].unlock();
             times++;
         }
     }
