@@ -79,9 +79,9 @@ public class Organize {
         for (; i < arr.length-1; i++) {
             if (arr[i]>arr[i+1])
                 p=false;
-            System.out.print(arr[i] + " ");
+            //System.out.print(arr[i] + " ");arr[i] + " "+
         }
-        System.out.print(arr[i] + " "+ System.lineSeparator() + p);
+        System.out.print( System.lineSeparator() + p);
     }
 
 }

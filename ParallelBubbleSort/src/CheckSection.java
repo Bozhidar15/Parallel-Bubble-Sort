@@ -27,7 +27,8 @@ public class CheckSection implements Runnable {
         while (done) {
             done = false;
             int calc = times;//*numberOfThreads;
-            if((size - calc)/2 <= position)
+            int calc2 = times*numberOfThreads;
+            if((size - calc2)/2 <= position)
                 break;
             int i = 0;
             locks[i].lock();
