@@ -1,5 +1,6 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Organize {
@@ -56,9 +57,9 @@ public class Organize {
         System.out.print(System.lineSeparator());
 
         long startTime = System.currentTimeMillis();
-
+        AtomicInteger finish  = new AtomicInteger(0);
         for (int i = 0; i < thrNumber; i++) {
-            threads[i] = new Thread(new CheckSection(arr, locks, i, thrNumber));
+            threads[i] = new Thread(new CheckSection(arr, locks, i, thrNumber, finish));
             threads[i].start();
         }
 

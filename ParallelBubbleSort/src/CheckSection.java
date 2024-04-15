@@ -1,3 +1,4 @@
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class CheckSection implements Runnable {
@@ -7,13 +8,15 @@ public class CheckSection implements Runnable {
     private int numberOfThreads;
     private ReentrantLock[] locks;
     private boolean done = true;
+    private AtomicInteger calc;
 
-    public CheckSection(int[] arr, ReentrantLock[] locks, int position,  int numberOfThreads) {
+    public CheckSection(int[] arr, ReentrantLock[] locks, int position, int numberOfThreads, AtomicInteger calc) {
         this.arr = arr;
         this.size = arr.length;
         this.locks = locks;
         this.position = position;
         this.numberOfThreads = numberOfThreads;
+        this.calc = calc;
     }
 
     private void swap(int pos) {
@@ -23,16 +26,16 @@ public class CheckSection implements Runnable {
     }
     @Override
     public void run() {
-        int times = 0;
+        //int times = 0;
         while (done) {
             done = false;
-            int calc = times;//*numberOfThreads;
-            int calc2 = times*numberOfThreads;
-            if((size - calc2)/2 <= position)
-                break;
+            //int calc = times*numberOfThreads;
+            //int calc2 = times*numberOfThreads;
+            /*if((size - calc2)/2 <= position)
+                break;*/
             int i = 0;
             locks[i].lock();
-            for ( ; i < size - calc - 1 ; i++) {
+            for ( ; i < size - calc.get() - 1 ; i++) {
 
                 locks[i+1].lock();
                 if (arr[i] > arr[i + 1]) {
@@ -51,7 +54,8 @@ public class CheckSection implements Runnable {
 
             }
             locks[i].unlock();
-            times++;
+            calc.getAndIncrement();
+            //times++;
         }
     }
 }
