@@ -8,7 +8,7 @@ public class CheckSection implements Runnable {
     private ReentrantLock[] locks;
     private boolean done = true;
 
-    public CheckSection(int[] arr, ReentrantLock[] locks, int position,  int numberOfThreads) {
+    public CheckSection(int[] arr, ReentrantLock[] locks, int numberOfThreads, int position) {
         this.arr = arr;
         this.size = arr.length;
         this.locks = locks;
@@ -23,34 +23,44 @@ public class CheckSection implements Runnable {
     }
     @Override
     public void run() {
-        int times = 0;
+        int times = 0, numberOfLocks = size%numberOfThreads == 0 ? numberOfThreads : numberOfThreads + 1 ;
+
         while (done) {
+            int start, numberOfElements = size/numberOfLocks, end, check = (times - 1)*numberOfThreads;
             done = false;
-            int calc = times;//*numberOfThreads;
-            int calc2 = times*numberOfThreads;
-            if((size - calc2)/2 <= position)
-                break;
-            int i = 0;
-            locks[i].lock();
-            for ( ; i < size - calc - 1 ; i++) {
-
-                locks[i+1].lock();
-                if (arr[i] > arr[i + 1]) {
-                    /*int q =i+1;
-                    System.out.println("thread " + position + " index " + i + " with " + q +" elements "
-                            + arr[i] + " "+ arr[i+1]);*/
-                    swap(i);
-                    done = true;
-
-                    /*for (int z = 0; z < arr.length; z++) {
-                        System.out.print(arr[z] + " ");
-                    }
-                    System.out.print(System.lineSeparator());*/
+            locks[position].lock();
+            for (int i = position; i < numberOfLocks; i++) {
+                if (i + 1 == numberOfLocks) {
+                    start = i*numberOfElements;
+                    end = size;
+                }else {
+                    start = i*numberOfElements;
+                    end = (i+1)*numberOfElements;
                 }
-                locks[i].unlock();
-
+                int j = start;
+                for (; j < end - 1; j++) {
+                    if (j == size-check)
+                        break;
+                    if (arr[j] > arr[j + 1]) {
+                        swap(j);
+                        done = true;
+                    }
+                }
+                if (i+1 == numberOfLocks) {
+                    position = 0;
+                    locks[i].unlock();
+                }else {
+                    locks[i+1].lock();
+                    if (arr[j] > arr[j + 1]) {
+                        swap(j);
+                        done = true;
+                    }
+                    locks[i].unlock();
+                }
             }
-            locks[i].unlock();
+            if (times == 0) {
+                done = true;
+            }
             times++;
         }
     }

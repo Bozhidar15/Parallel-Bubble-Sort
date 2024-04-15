@@ -42,16 +42,19 @@ public class Organize {
 
     public static void createLocks() {
         readFromConsole();
+        int numberOfLocks;
         if (arrSize%thrNumber == 0) {
             locks = new ReentrantLock[thrNumber];
             for (int i = 0; i < thrNumber; i++) {
                 locks[i] = new ReentrantLock(true);
             }
+            numberOfLocks = thrNumber;
         } else {
             locks = new ReentrantLock[thrNumber + 1];
             for (int i = 0; i < thrNumber +     1; i++) {
                 locks[i] = new ReentrantLock(true);
             }
+            numberOfLocks = thrNumber + 1;
         }
 
 
@@ -66,7 +69,7 @@ public class Organize {
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < thrNumber; i++) {
-            threads[i] = new Thread(new CheckSection(arr, locks, i, thrNumber));
+            threads[i] = new Thread(new CheckSection(arr, locks, thrNumber, i ));
             threads[i].start();
         }
 
@@ -89,7 +92,7 @@ public class Organize {
                 p=false;
             //System.out.print(arr[i] + " ");arr[i] + " "+
         }
-        System.out.print( System.lineSeparator() + p);
+        System.out.print(System.lineSeparator() + p);
     }
 
 }
