@@ -2,7 +2,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Organize {
+public class Organize extends CheckSection {
 
     private static int thrNumber, arrSize;
     private static ReentrantLock[] locks;
