@@ -26,36 +26,22 @@ public class CheckSection implements Runnable {
     }
     @Override
     public void run() {
-        //int times = 0;
         while (done) {
             done = false;
-            //int calc = times*numberOfThreads;
-            //int calc2 = times*numberOfThreads;
-            /*if((size - calc2)/2 <= position)
-                break;*/
             int i = 0;
             locks[i].lock();
             for ( ; i < size - calc.get() - 1 ; i++) {
 
                 locks[i+1].lock();
                 if (arr[i] > arr[i + 1]) {
-                    /*int q =i+1;
-                    System.out.println("thread " + position + " index " + i + " with " + q +" elements "
-                            + arr[i] + " "+ arr[i+1]);*/
                     swap(i);
                     done = true;
-
-                    /*for (int z = 0; z < arr.length; z++) {
-                        System.out.print(arr[z] + " ");
-                    }
-                    System.out.print(System.lineSeparator());*/
                 }
                 locks[i].unlock();
 
             }
             locks[i].unlock();
             calc.getAndIncrement();
-            //times++;
         }
     }
 }

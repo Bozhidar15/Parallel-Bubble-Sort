@@ -37,6 +37,7 @@ public class CheckSection implements Runnable {
                     start = i*numberOfElements;
                     end = (i+1)*numberOfElements;
                 }
+
                 int j = start;
                 for (; j < end - 1; j++) {
                     if (j == size-check)
